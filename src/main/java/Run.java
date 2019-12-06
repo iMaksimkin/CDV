@@ -1,12 +1,16 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Run {
     public static void main(String[] args) throws IOException {
 
-       EmployeeInfoParser employeeInfoParser = new EmployeeInfoParser();
+        EmployeeInfoParser employeeInfoParser = new EmployeeInfoParser();
 
-       employeeInfoParser.readCredsfromconsole();
-        employeeInfoParser.getUsersEmail();
-        String str =  employeeInfoParser.getAccountInfoResponse("brad.doan@sperasoft.com");
-       employeeInfoParser.getAccountInfo(str);
-}}
+        employeeInfoParser.readCredsfromconsole();
+        List userEmailsList = employeeInfoParser.getUsersEmail();
+       List userPagesList = employeeInfoParser.getAccountInfoResponse(userEmailsList);
+        employeeInfoParser.getAccountInfo(userPagesList);
+
+    }
+}
