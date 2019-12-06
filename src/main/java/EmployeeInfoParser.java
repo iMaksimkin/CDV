@@ -46,8 +46,36 @@ public class EmployeeInfoParser {
         pass = reader.readLine();
     }
 
-    public static void getUsers(String pass) {
+    public static String getUsersEmail() throws IOException {
+        System.out.println(user);
+        System.out.println(pass);
+        UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user, pass);
+        HttpGet httpGet = new HttpGet(String.format(groupsOfUsersPath, 200));
 
+
+        HttpHost targetHost = new HttpHost("confluence.sperasoft.com", 443, "https");
+        CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(
+                new AuthScope(targetHost.getHostName(), targetHost.getPort()),
+                creds);
+        credsProvider.setCredentials(AuthScope.ANY, creds);
+
+        // Create AuthCache instance
+        AuthCache authCache = new BasicAuthCache();
+        // Generate BASIC scheme object and add it to the local auth cache
+        BasicScheme basicAuth = new BasicScheme();
+        authCache.put(targetHost, basicAuth);
+
+        // Add AuthCache to the execution context
+        HttpClientContext context = HttpClientContext.create();
+        context.setCredentialsProvider(credsProvider);
+        context.setAuthCache(authCache);
+
+
+        HttpClient httpClient = HttpClients.createDefault();
+        HttpResponse response = httpClient.execute(targetHost, httpGet, context);
+
+        return null;
     }
 
     public String getAccountInfoResponse(String email) throws IOException {
