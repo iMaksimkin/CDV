@@ -20,6 +20,7 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.*;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -28,6 +29,7 @@ import org.jsoup.nodes.Element;
 public class EmployeeInfoParser {
     //   private static final Logger LOGGER = Logger.getLogger(EmployeeInfoParser.class);
     // TODO: method with adding basic auth in headers / class with response model / class with employee model / class with db adder methods
+    // TODO add assertions to responses
     private static final String endpoint = "https://confluence.sperasoft.com/display/~%s";   // add in properties
     private static String user = "";
     private static String pass = "";
@@ -74,6 +76,11 @@ public class EmployeeInfoParser {
 
         HttpClient httpClient = HttpClients.createDefault();
         HttpResponse response = httpClient.execute(targetHost, httpGet, context);
+        System.out.println(response.getEntity().getContent());
+        HttpEntity entity = response.getEntity();
+        String body = EntityUtils.toString(entity, "UTF-8");
+        JSONArray array = new JSONArray(body);
+
 
         return null;
     }
@@ -110,7 +117,7 @@ public class EmployeeInfoParser {
         HttpResponse response = httpClient.execute(targetHost, httpGet, context);
         HttpEntity entity = response.getEntity();
         String body = EntityUtils.toString(entity, "UTF-8");
-        System.out.println(body);
+      //  System.out.println(body);
         return body;
     }
 
