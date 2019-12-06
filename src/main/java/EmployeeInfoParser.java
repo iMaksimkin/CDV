@@ -30,6 +30,7 @@ public class EmployeeInfoParser {
     //   private static final Logger LOGGER = Logger.getLogger(EmployeeInfoParser.class);
     // TODO: method with adding basic auth in headers / class with response model / class with employee model / class with db adder methods
     // TODO add assertions to responses
+    // add git ignore
     private static final String endpoint = "https://confluence.sperasoft.com/display/~%s";   // add in properties
     private static String user = "";
     private static String pass = "";
