@@ -52,8 +52,8 @@ public class EmployeeInfoParser {
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user, pass);
         List usersEmailList = new ArrayList();
 
-for (int i=0; i<800; i+=200){
-    HttpGet httpGet = new HttpGet( String.format( groupsOfUsersPath, i) );
+        for (int i = 0; i < 800; i += 200) {
+            HttpGet httpGet = new HttpGet(String.format(groupsOfUsersPath, i));
 
             HttpHost targetHost = new HttpHost("confluence.sperasoft.com", 443, "https");
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
@@ -84,7 +84,7 @@ for (int i=0; i<800; i+=200){
             for (int j = 0; j < arr.length(); j++) {
                 usersEmailList.add(arr.getJSONObject(j).get("username").toString());
             }
-       }
+        }
 
 
         return usersEmailList;
@@ -141,8 +141,8 @@ for (int i=0; i<800; i+=200){
             String location = doc.select("#userparam-location").first().text();
             String department = doc.select("#userparam-department").first().text();
             String fullName = doc.select("#fullName").first().text();
-            String firstName = fullName.split( " " )[0];
-            String secondName = fullName.split( " " )[1];
+            String firstName = fullName.split(" ")[0];
+            String secondName = fullName.split(" ")[1];
 
             String aboutMeContent = "";
             String startDate = "";
@@ -151,35 +151,48 @@ for (int i=0; i<800; i+=200){
                 //    Element aboutMeElem = doc.select("#profile-about-me-content").first();
                 //     if ( aboutMeElem.text().isEmpty()||aboutMeElem.text() == null){
                 aboutMeContent = doc.select("#profile-about-me-content").first().text();
-                startDate = aboutMeContent.split( "Start Date: " )[1].split( " " )[0];
-                birthday = aboutMeContent.split( "Birthday: " )[1];
             }
-            accountInfo.put( detailsAboutPeople.EMAIL, email );
-            accountInfo.put( detailsAboutPeople.POSITION, position );
-            accountInfo.put( detailsAboutPeople.LOCATION, location );
-            accountInfo.put( detailsAboutPeople.DEPARTMENT, department );
-            accountInfo.put( detailsAboutPeople.FIRST_NAME, firstName );
-            accountInfo.put( detailsAboutPeople.SECOND_NAME, secondName );
-            accountInfo.put( detailsAboutPeople.START_DATE_AT_COMPANY, startDate );
-            accountInfo.put( detailsAboutPeople.BIRTHDAY, birthday );
-            System.out.println(i + ") " + firstName + " "+ secondName + " " + department + " " + location + " " + position + " Start Date: " + startDate + " Birthday: " + birthday);
+
+                try {
+
+
+                    startDate = aboutMeContent.split("Start Date: ")[1].split(" ")[0];
+
+                    birthday = aboutMeContent.split("Birthday: ")[1];
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    continue;
+                }
+
+            accountInfo.put(detailsAboutPeople.EMAIL, email);
+            accountInfo.put(detailsAboutPeople.POSITION, position);
+            accountInfo.put(detailsAboutPeople.LOCATION, location);
+            accountInfo.put(detailsAboutPeople.DEPARTMENT, department);
+            accountInfo.put(detailsAboutPeople.FIRST_NAME, firstName);
+            accountInfo.put(detailsAboutPeople.SECOND_NAME, secondName);
+            accountInfo.put(detailsAboutPeople.START_DATE_AT_COMPANY, startDate);
+            accountInfo.put(detailsAboutPeople.BIRTHDAY, birthday);
+            System.out.println(i + ") " + firstName + " " + secondName + " " + department + " " + location + " " + position + " Start Date: " + startDate + " Birthday: " + birthday);
         }
         return accountInfo;
     }
 
-    public enum detailsAboutPeople{
-        EMAIL (  "email" ),
-        POSITION ( "position" ),
-        LOCATION ( "location" ),
-        DEPARTMENT( "department" ),
-        FIRST_NAME ( "firstName" ),
-        SECOND_NAME ( "secondName" ),
-        START_DATE_AT_COMPANY ( "startDate" ),
-        BIRTHDAY ( "birthday" );
+    public enum detailsAboutPeople {
+        EMAIL("email"),
+        POSITION("position"),
+        LOCATION("location"),
+        DEPARTMENT("department"),
+        FIRST_NAME("firstName"),
+        SECOND_NAME("secondName"),
+        START_DATE_AT_COMPANY("startDate"),
+        BIRTHDAY("birthday");
 
         private String name;
 
-        detailsAboutPeople(String name) {this.name = name; }
+        detailsAboutPeople(String name) {
+            this.name = name;
+        }
 
         private String get() {
             return this.name;
