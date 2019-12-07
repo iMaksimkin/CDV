@@ -24,7 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 
 public class EmployeeInfoParser {
@@ -49,11 +48,11 @@ public class EmployeeInfoParser {
         pass = reader.readLine(); // TODO: hide input from console
     }
 
-    public static List getUsersEmail(int i) throws IOException {
+    public static List getUsersEmail() throws IOException {
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user, pass);
         List usersEmailList = new ArrayList();
 //        for ( int j=0; j<800; j+=200 ) {
-            HttpGet httpGet = new HttpGet( String.format( groupsOfUsersPath, i) ); // for first 200
+            HttpGet httpGet = new HttpGet( String.format( groupsOfUsersPath, 0) ); // for first 200
 
 
             HttpHost targetHost = new HttpHost("confluence.sperasoft.com", 443, "https");
@@ -75,15 +74,19 @@ public class EmployeeInfoParser {
             context.setAuthCache(authCache);
 
 
-        HttpClient httpClient = HttpClients.createDefault();
-        HttpResponse response = httpClient.execute(targetHost, httpGet, context);
-        HttpEntity entity = response.getEntity();
-        String body = EntityUtils.toString(entity, "UTF-8");
-        JSONObject obj = new JSONObject(body);
-        JSONArray arr = obj.getJSONArray("results");
-        for (int i = 0; i < arr.length(); i++) {
-            usersEmailList.add(arr.getJSONObject(i).get("username").toString());
-        }
+            HttpClient httpClient = HttpClients.createDefault();
+            HttpResponse response = httpClient.execute(targetHost, httpGet, context);
+            HttpEntity entity = response.getEntity();
+            String body = EntityUtils.toString(entity, "UTF-8");
+            JSONObject obj = new JSONObject(body);
+            JSONArray arr = obj.getJSONArray("results");
+
+            for (int i = 0; i < arr.length(); i++) {
+                usersEmailList.add(arr.getJSONObject(i).get("username").toString());
+            }
+//        }
+
+
         return usersEmailList;
     }
 
