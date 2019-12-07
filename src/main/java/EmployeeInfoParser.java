@@ -51,9 +51,9 @@ public class EmployeeInfoParser {
     public static List getUsersEmail() throws IOException {
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user, pass);
         List usersEmailList = new ArrayList();
-//        for ( int j=0; j<800; j+=200 ) {
-            HttpGet httpGet = new HttpGet( String.format( groupsOfUsersPath, 0) ); // for first 200
 
+for (int i=0; i<800; i+=200){
+    HttpGet httpGet = new HttpGet( String.format( groupsOfUsersPath, i) );
 
             HttpHost targetHost = new HttpHost("confluence.sperasoft.com", 443, "https");
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
@@ -81,10 +81,10 @@ public class EmployeeInfoParser {
             JSONObject obj = new JSONObject(body);
             JSONArray arr = obj.getJSONArray("results");
 
-            for (int i = 0; i < arr.length(); i++) {
-                usersEmailList.add(arr.getJSONObject(i).get("username").toString());
+            for (int j = 0; j < arr.length(); j++) {
+                usersEmailList.add(arr.getJSONObject(j).get("username").toString());
             }
-//        }
+       }
 
 
         return usersEmailList;

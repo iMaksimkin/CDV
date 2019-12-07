@@ -8,7 +8,7 @@ public class Run {
         EmployeeInfoParser employeeInfoParser = new EmployeeInfoParser();
 
         employeeInfoParser.readCredsfromconsole();
-        List userEmailsList = employeeInfoParser.getUsersEmail(0);
+        List userEmailsList = employeeInfoParser.getUsersEmail();
 
        List userPagesList = employeeInfoParser.getAccountInfoResponse(userEmailsList);
         employeeInfoParser.getAccountInfo(userPagesList);
