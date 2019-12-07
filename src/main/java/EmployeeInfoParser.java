@@ -1,7 +1,10 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -129,7 +132,7 @@ public class EmployeeInfoParser {
         return pagesList;
     }
 
-    public HashMap<String, String> getAccountInfo(List<String> pagesList)    // statement for null value of string & change this method with user model instead hashmap
+    public HashMap<String, String> getAccountInfo(List<String> pagesList) throws ParseException    // statement for null value of string & change this method with user model instead hashmap
     {
         HashMap accountInfo = new HashMap<String, String>();
         int i = 0;
@@ -156,9 +159,9 @@ public class EmployeeInfoParser {
                 try {
 
 
-                    startDate = aboutMeContent.split("Start Date: ")[1].split(" ")[0];
+                    startDate = formatDateForSQL( aboutMeContent.split( "Start Date: " )[1].split( " " )[0] );
 
-                    birthday = aboutMeContent.split("Birthday: ")[1];
+                    birthday = formatDateForSQL( aboutMeContent.split( "Birthday: " )[1] );
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -178,16 +181,16 @@ public class EmployeeInfoParser {
         return accountInfo;
     }
 
-    public enum detailsAboutPeople {
-        EMAIL("email"),
-        POSITION("position"),
-        LOCATION("location"),
-        DEPARTMENT("department"),
-        FIRST_NAME("firstName"),
-        SECOND_NAME("secondName"),
-        START_DATE_AT_COMPANY("startDate"),
-        BIRTHDAY("birthday");
-
+    public enum detailsAboutPeople{
+        EMAIL (  "email" ),
+        BIRTHDAY ( "birthday" ),
+        POSITION ( "position" ),
+        LOCATION ( "location" ),
+        DEPARTMENT( "department" ),
+        FIRST_NAME ( "firstName" ),
+        SECOND_NAME ( "secondName" ),
+        START_DATE_AT_COMPANY ( "startDate" );
+        
         private String name;
 
         detailsAboutPeople(String name) {
@@ -198,6 +201,15 @@ public class EmployeeInfoParser {
             return this.name;
         }
 
+    }
+
+    public String formatDateForSQL( String oldDateString ) throws ParseException {
+
+        SimpleDateFormat sdf = new SimpleDateFormat( "dd/MM/yyyy" );
+        Date d = sdf.parse( oldDateString );
+        sdf.applyPattern( "yyyy/MM/dd" );
+        String newDateString = sdf.format( d );
+        return newDateString;
     }
 
     public void setDataIntoBase(HashMap data)  // need new class for it or it will bee arraylist of hashmaps or just model of employee
