@@ -14,7 +14,7 @@ import java.util.List;
 public class DataCollector {
 
     public void setUsersToDb(List<HashMap<DataFields, String>> users){
-
+        users.forEach(this::setUserToDb);
     }
 
     private void setUserToDb(HashMap<DataFields, String> userInfoFromConfluence){
