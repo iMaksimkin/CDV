@@ -22,7 +22,7 @@ public class PersonalInfo implements Serializable {
     @Column(name = "start_date")
     private Date startDate;
 
-    @Column(name = "end_date")
+    @Column(name = "birthday")
     private Date birthday;
 
 
