@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 
 
-import com.sun.org.apache.xerces.internal.xs.StringList;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -92,7 +91,7 @@ public class EmployeeInfoParser {
 
 
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user, pass);
-        List pagesList = new ArrayList<StringList>();
+        List pagesList = new ArrayList<String>();
         int i = 0;
         for (String email : usersEmailList) {
             HttpGet httpGet = new HttpGet(String.format(endpoint, email));
@@ -150,7 +149,7 @@ public class EmployeeInfoParser {
             accountInfo.put("fullName", fullName);   //  need to split first name and last name
             accountInfo.put("aboutMeContent", aboutMeContent);   //  need to split start date and birthday
 
-            System.out.println(i + ") " + fullName + " " + department + " " + location + " " + department + " " + aboutMeContent);
+            System.out.println(i + ") " + fullName + " " + department + " " + location + " " + position + " " + aboutMeContent);
         }
         return accountInfo;
     }
