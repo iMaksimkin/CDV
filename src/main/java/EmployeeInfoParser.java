@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import enums.DetailsAboutPeople;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -132,9 +133,9 @@ public class EmployeeInfoParser {
         return pagesList;
     }
 
-    public HashMap<String, String> getAccountInfo(List<String> pagesList) throws ParseException    // statement for null value of string & change this method with user model instead hashmap
+    public List<HashMap<DetailsAboutPeople, String>> getAccountInfo(List<String> pagesList) throws ParseException    // statement for null value of string & change this method with user model instead hashmap
     {
-        HashMap accountInfo = new HashMap<String, String>();
+        List<HashMap<DetailsAboutPeople, String>> accountInfo = new ArrayList<>();
         int i = 0;
         for (String html : pagesList) {
             i++;
@@ -156,58 +157,33 @@ public class EmployeeInfoParser {
                 aboutMeContent = doc.select("#profile-about-me-content").first().text();
             }
 
-                try {
+            try {
+                startDate = formatDateForSQL(aboutMeContent.split("Start Date: ")[1].split(" ")[0]);
 
-
-                    startDate = formatDateForSQL( aboutMeContent.split( "Start Date: " )[1].split( " " )[0] );
-
-                    birthday = formatDateForSQL( aboutMeContent.split( "Birthday: " )[1] );
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    continue;
-                }
-
-            accountInfo.put(detailsAboutPeople.EMAIL, email);
-            accountInfo.put(detailsAboutPeople.POSITION, position);
-            accountInfo.put(detailsAboutPeople.LOCATION, location);
-            accountInfo.put(detailsAboutPeople.DEPARTMENT, department);
-            accountInfo.put(detailsAboutPeople.FIRST_NAME, firstName);
-            accountInfo.put(detailsAboutPeople.SECOND_NAME, secondName);
-            accountInfo.put(detailsAboutPeople.START_DATE_AT_COMPANY, startDate);
-            accountInfo.put(detailsAboutPeople.BIRTHDAY, birthday);
+                birthday = formatDateForSQL(aboutMeContent.split("Birthday: ")[1]);
+            } catch (Exception e) {
+                continue;
+            }
+            HashMap<DetailsAboutPeople, String> peopleInfo = new HashMap<>();
+            peopleInfo.put(DetailsAboutPeople.EMAIL, email);
+            peopleInfo.put(DetailsAboutPeople.POSITION, position);
+            peopleInfo.put(DetailsAboutPeople.LOCATION, location);
+            peopleInfo.put(DetailsAboutPeople.DEPARTMENT, department);
+            peopleInfo.put(DetailsAboutPeople.FIRST_NAME, firstName);
+            peopleInfo.put(DetailsAboutPeople.SECOND_NAME, secondName);
+            peopleInfo.put(DetailsAboutPeople.START_DATE_AT_COMPANY, startDate);
+            peopleInfo.put(DetailsAboutPeople.BIRTHDAY, birthday);
+            accountInfo.add(peopleInfo);
             System.out.println(i + ") " + firstName + " " + secondName + " " + department + " " + location + " " + position + " Start Date: " + startDate + " Birthday: " + birthday);
         }
         return accountInfo;
-    }
-
-    public enum detailsAboutPeople{
-        EMAIL (  "email" ),
-        BIRTHDAY ( "birthday" ),
-        POSITION ( "position" ),
-        LOCATION ( "location" ),
-        DEPARTMENT( "department" ),
-        FIRST_NAME ( "firstName" ),
-        SECOND_NAME ( "secondName" ),
-        START_DATE_AT_COMPANY ( "startDate" );
-        
-        private String name;
-
-        detailsAboutPeople(String name) {
-            this.name = name;
-        }
-
-        private String get() {
-            return this.name;
-        }
-
     }
 
     public String formatDateForSQL( String oldDateString ) throws ParseException {
 
         SimpleDateFormat sdf = new SimpleDateFormat( "dd/MM/yyyy" );
         Date d = sdf.parse( oldDateString );
-        sdf.applyPattern( "yyyy/MM/dd" );
+        sdf.applyPattern( "yyyy-MM-dd" );
         String newDateString = sdf.format( d );
         return newDateString;
     }

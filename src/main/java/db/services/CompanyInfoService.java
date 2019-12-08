@@ -1,4 +1,4 @@
-package db.services;
+/*package db.services;
 
 import db.entities.CompanyInfo;
 
@@ -14,4 +14,4 @@ public class CompanyInfoService {
         em.getTransaction().commit();
         return companyInfoFromDb;
     }
-}
+}*/

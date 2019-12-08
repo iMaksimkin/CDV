@@ -1,11 +1,8 @@
 package collect_data;
 
-import db.entities.CompanyInfo;
-import db.entities.PersonalInfo;
 import db.entities.User;
-import db.services.CompanyInfoService;
-import db.services.PersonalInfoService;
 import db.services.UserService;
+import enums.DetailsAboutPeople;
 import util.DateUtil;
 
 import java.util.HashMap;
@@ -13,63 +10,45 @@ import java.util.List;
 
 public class DataCollector {
 
-    public void setUsersToDb(List<HashMap<DataFields, String>> users){
+    public void setUsersToDb(List<HashMap<DetailsAboutPeople, String>> users){
         users.forEach(this::setUserToDb);
     }
 
-    private void setUserToDb(HashMap<DataFields, String> userInfoFromConfluence){
+    private void setUserToDb(HashMap<DetailsAboutPeople, String> userInfoFromConfluence){
         User user = new User();
-        PersonalInfo personalInfo = new PersonalInfo();
-        CompanyInfo companyInfo = new CompanyInfo();
+
 
         fillUser(user, userInfoFromConfluence);
-        fillPersonalInfo(personalInfo, userInfoFromConfluence, user);
-        fillCompanyInfo(companyInfo, userInfoFromConfluence, user);
 
-        sentDataToDb(user, personalInfo, companyInfo);
+        sentDataToDb(user);
     }
 
-    private void fillUser(User user, HashMap<DataFields, String> userInfoFromConfluence){
+    private void fillUser(User user, HashMap<DetailsAboutPeople, String> userInfoFromConfluence){
         user
-                .setEmail(userInfoFromConfluence.get(DataFields.EMAIL));
+                .setEmail(userInfoFromConfluence.get(DetailsAboutPeople.EMAIL))
+                .setBirthday(DateUtil.convertStringToSqlDate(userInfoFromConfluence.get(DetailsAboutPeople.BIRTHDAY)))
+                .setName(userInfoFromConfluence.get(DetailsAboutPeople.FIRST_NAME))
+                .setSurname(userInfoFromConfluence.get(DetailsAboutPeople.SECOND_NAME))
+                .setStartDate(DateUtil.convertStringToSqlDate(userInfoFromConfluence.get(DetailsAboutPeople.START_DATE_AT_COMPANY)))
+                .setDepartment(userInfoFromConfluence.get(DetailsAboutPeople.DEPARTMENT))
+                .setLocation(userInfoFromConfluence.get(DetailsAboutPeople.LOCATION))
+                .setPosition(userInfoFromConfluence.get(DetailsAboutPeople.POSITION));
     }
 
-    private void fillPersonalInfo(PersonalInfo personalInfo, HashMap<DataFields, String> userInfoFromConfluence, User user){
+    /*private void fillPersonalInfo(PersonalInfo personalInfo, HashMap<DetailsAboutPeople, String> userInfoFromConfluence){
         personalInfo
-                .setBirthday(DateUtil.convertStringToSqlDate(userInfoFromConfluence.get(DataFields.BIRTHDAY)))
-                .setName(userInfoFromConfluence.get(DataFields.NAME))
-                .setSurname(userInfoFromConfluence.get(DataFields.SURNAME))
-                .setStartDate(DateUtil.convertStringToSqlDate(userInfoFromConfluence.get(DataFields.START_DATE)))
-                .setUser(user);
+                ;
     }
 
-    private void fillCompanyInfo(CompanyInfo companyInfo, HashMap<DataFields, String> userInfoFromConfluence, User user){
+    private void fillCompanyInfo(CompanyInfo companyInfo, HashMap<DetailsAboutPeople, String> userInfoFromConfluence){
         companyInfo
-                .setDepartment(userInfoFromConfluence.get(DataFields.DEPARTMENT))
-                .setLocation(userInfoFromConfluence.get(DataFields.LOCATION))
-                .setPosition(userInfoFromConfluence.get(DataFields.POSITION))
-                .setUser(user);
-    }
+                ;
+    }*/
 
-    private void sentDataToDb(User user, PersonalInfo personalInfo, CompanyInfo companyInfo){
-        sentUserToDb(user);
-        sentPersonalInfoToDb(personalInfo);
-        sentCompanyInfoToDb(companyInfo);
-    }
-
-    private void sentUserToDb(User user){
+    private void sentDataToDb(User user){
         UserService userService = new UserService();
         userService.add(user);
-    }
 
-    private void sentPersonalInfoToDb(PersonalInfo personalInfo){
-        PersonalInfoService personalInfoService = new PersonalInfoService();
-        personalInfoService.add(personalInfo);
-    }
-
-    private void sentCompanyInfoToDb(CompanyInfo companyInfo){
-        CompanyInfoService companyInfoService = new CompanyInfoService();
-        companyInfoService.add(companyInfo);
     }
 
 }

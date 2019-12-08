@@ -6,12 +6,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
 public class UserService {
-    private EntityManager em = Persistence.createEntityManagerFactory("USER").createEntityManager();
+    private static final EntityManager em = Persistence.createEntityManagerFactory("USER").createEntityManager();
 
     public User add(User user){
         em.getTransaction().begin();
-        User userFromDb = em.merge(user);
+        user = em.merge(user);
         em.getTransaction().commit();
-        return userFromDb;
+        return user;
     }
 }

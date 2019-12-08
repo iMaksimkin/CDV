@@ -1,3 +1,4 @@
+/*
 package db.services;
 
 import db.entities.PersonalInfo;
@@ -16,3 +17,4 @@ public class PersonalInfoService {
     }
 
 }
+*/
